@@ -70,6 +70,7 @@ class FilePanel(EditCanvasContainer):
         )
         self._projection_button.Bind(wx.EVT_BUTTON, self._on_projection_button)
         self._button_sizer.Add(self._projection_button)
+
         self._location_button = wx.Button(
             self._button_window,
             label=", ".join([f"{s:.2f}" for s in self.canvas.camera.location]),
@@ -102,8 +103,7 @@ class FilePanel(EditCanvasContainer):
         self._dim_options.SetItems(level.level_wrapper.dimensions)
         self._set_dimension(canvas.dimension)
         self._dim_options.Bind(wx.EVT_CHOICE, self._on_dimension_change)
-
-        self._button_sizer.Add(self._dim_options)
+        self._button_sizer.Add(self._dim_options, flag=wx.ALIGN_CENTER_VERTICAL)
 
         def create_button(text, operation):
             button = wx.Button(self._button_window, label=text)
@@ -130,9 +130,16 @@ class FilePanel(EditCanvasContainer):
         )
         self._close_button.SetBitmap(image.icon.tablericons.square_x.bitmap(20, 20))
         self._close_button.SetToolTip(lang.get("program_3d_edit.file_ui.close_tooltip"))
-        size = self._close_button.GetSize()
-        self._close_button.SetSize(wx.Size(size.GetHeight(), size.GetHeight()))
-        self._close_button.SetMinSize(wx.Size(size.GetHeight(), size.GetHeight()))
+
+        height = self._dim_options.GetSize().GetHeight()
+        self._projection_button.SetMinSize(wx.Size(-1, height))
+        self._location_button.SetMinSize(wx.Size(-1, height))
+        self._speed_button.SetMinSize(wx.Size(-1, height))
+        self._undo_button.SetMinSize(wx.Size(-1, height))
+        self._redo_button.SetMinSize(wx.Size(-1, height))
+        self._save_button.SetMinSize(wx.Size(-1, height))
+        self._close_button.SetSize(wx.Size(height, height))
+        self._close_button.SetMinSize(wx.Size(height, height))
 
         self._update_buttons()
 
@@ -233,6 +240,9 @@ class FilePanel(EditCanvasContainer):
         )
         self._button_window.Raise()
         self._button_window.Refresh(False)
+
+    def windows(self) -> list[wx.Window]:
+        return [self._version_panel, self._button_window]
 
 
 class SpeedSelectDialog(wx.Dialog):

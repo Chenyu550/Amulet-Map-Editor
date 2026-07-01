@@ -1,5 +1,5 @@
 import wx
-from typing import TYPE_CHECKING, Tuple, Union, Type
+from typing import TYPE_CHECKING, Tuple, Union, Type, Iterable
 import logging
 import math
 import numpy
@@ -743,4 +743,8 @@ class PasteTool(wx.BoxSizer, DefaultBaseToolUI):
         self.canvas.renderer.draw_level()
         self.canvas.renderer.draw_fake_levels()
         self._selection.draw()
+        self.canvas.mask_gl()
         self.canvas.renderer.end_draw()
+
+    def windows(self) -> Iterable[wx.Window]:
+        return [self._paste_panel]
